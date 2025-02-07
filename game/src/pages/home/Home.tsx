@@ -7,10 +7,12 @@ const Home = () => (
     <div className="scanline"></div>
     <div className="crt"></div>
     <div className="container">
-      <marquee behavior="scroll" direction="left" className="top-marquee">
-        ★★★ UNDER CONSTRUCTION ★★★ VISITOR NUMBER: 0000008 ★★★ BEST VIEWED IN
-        NETSCAPE NAVIGATOR 4.0 ★★★
-      </marquee>
+      <div className="marquee-container">
+        <div className="marquee-content">
+          ★★★ UNDER CONSTRUCTION ★★★ VISITOR NUMBER: 0000008 ★★★ BEST VIEWED IN
+          NETSCAPE NAVIGATOR 4.0 ★★★
+        </div>
+      </div>
 
       <h1 className="title neonText flicker">TAMA★GOCHI</h1>
 
