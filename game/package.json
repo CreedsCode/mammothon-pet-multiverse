@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@heroiclabs/nakama-js": "^2.8.0",
     "littlejsengine": "^1.11.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
