@@ -26,9 +26,9 @@ export class GameStateManager {
 
   public setState(newState: GameState): void {
     if (this.currentState === newState) return;
-    console.log("Setting state to:", newState);
+    console.log("Setting state to:", GameState[newState]);
     this.currentState = newState;
-    // Notify all subscribers of state change
+    // Notify all subscribers of state change 
     this.stateChangeCallbacks.forEach(callback => callback(newState));
   }
 

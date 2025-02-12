@@ -1,9 +1,12 @@
 import { GameState, GameStateManager } from "./GameStateManager";
+import { getUIObject, getInitUISystem, UIObjectType } from "../../../../lib/littlejs-ui";
 
 export class UIManager {
   private static instance: UIManager;
   private gameStateManager: GameStateManager;
   private currentState: GameState | null = null;
+  private _uiRoot: UIObjectType | null = null;
+  private UIObjectConstructor: UIObjectType | null = null;
 
   private constructor() {
     this.gameStateManager = GameStateManager.getInstance();
@@ -20,8 +23,27 @@ export class UIManager {
     return UIManager.instance;
   }
 
-  public createUI(): void {
+  public async initialize(): Promise<void> {
+    // Get the UI system components
+    const [UIObject, initUISystem] = await Promise.all([
+      getUIObject(),
+      getInitUISystem()
+    ]);
+
+    // Store the constructor
+    this.UIObjectConstructor = UIObject;
+
+    // Initialize the UI system
+    initUISystem();
+  }
+
+  public async createUI(): Promise<void> {
+    if (!this.UIObjectConstructor) {
+      await this.initialize();
+    }
+
     // One-time UI setup
+    this._uiRoot = new this.UIObjectConstructor!();
     console.log("UI initialized");
   }
 

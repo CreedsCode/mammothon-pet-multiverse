@@ -78,8 +78,17 @@ export class Game {
         if (errorJson?.error?.Message?.includes("already associated with this account")) {
           // This is fine, continue with player setup
           console.log("Persona already claimed by this account, continuing...");
-          this._gameStateManager.setState(GameState.MENU);
-          return;
+          try {
+            await makeRpcCall("tx/game/create-player", { nickname: username });
+            const playerInfo = await makeRpcCall("query/game/player-info", { nickname: username });
+            console.log("Player info fetched successfully", playerInfo);
+            this._gameStateManager.setState(GameState.MENU);
+            return;
+          } catch (playerError) {
+            console.error("Failed to setup player after persona check:", playerError);
+            this._gameStateManager.setState(GameState.LOGIN);
+            return;
+          }
         }
 
         console.error("RPC call failed (nakama/claim-persona):", JSON.stringify({
