@@ -31,6 +31,7 @@ func MustInitWorld(w *cardinal.World) {
 	Must(
 		cardinal.RegisterComponent[component.Player](w),
 		cardinal.RegisterComponent[component.Health](w),
+		cardinal.RegisterComponent[component.PetsState](w),
 	)
 
 	// Register messages (user action)
@@ -43,6 +44,7 @@ func MustInitWorld(w *cardinal.World) {
 	// Register queries
 	// NOTE: You must register your queries here for it to be accessible.
 	Must(
+		cardinal.RegisterQuery[query.PlayerInfoRequest, query.PlayerInfoResponse](w, "player-info", query.PlayerInfo),
 		cardinal.RegisterQuery[query.PlayerHealthRequest, query.PlayerHealthResponse](w, "player-health", query.PlayerHealth),
 	)
 

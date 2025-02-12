@@ -1,14 +1,18 @@
-import { engineInit, } from "littlejsengine";
+import { engineInit } from "littlejsengine";
 import { Game } from "./modules/game/Game";
+import { DeviceManager } from "./modules/device/DeviceManager";
+import { NakamaManager, makeRpcCall } from "./modules/nakama/NakamaManager";
 
 let game: Game;
 
 ///////////////////////////////////////////////////////////////////////////////
 export function initGame() {
   engineInit(
-    () => {
+    async () => {
       // Game init callback
-      game = new Game();
+      const deviceManager = new DeviceManager();
+      game = new Game(deviceManager);
+
     },
     () => {
       // Game update callback
@@ -30,7 +34,7 @@ export function initGame() {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-export function destroyGame() {
+export async function destroyGame() {
   // engineDestroy();
 }
 
