@@ -1,12 +1,24 @@
 declare module 'littlejsengine/plugins/uiSystem' {
+  interface Vec2 {
+    x: number;
+    y: number;
+    copy(): Vec2;
+    add(v: Vec2): Vec2;
+    multiply(v: Vec2): Vec2;
+  }
+
+  interface Color {
+    toString(): string;
+  }
+
   export class UIObject {
-    localPos: any; // vec2
-    pos: any; // vec2
-    size: any; // vec2
-    color: any;
-    lineColor: any;
-    textColor: any;
-    hoverColor: any;
+    localPos: Vec2;
+    pos: Vec2;
+    size: Vec2;
+    color: Color;
+    lineColor: Color;
+    textColor: Color;
+    hoverColor: Color;
     lineWidth: number;
     font: string;
     visible: boolean;
@@ -15,7 +27,7 @@ declare module 'littlejsengine/plugins/uiSystem' {
     mouseIsOver: boolean;
     mouseIsHeld: boolean;
 
-    constructor(localPos?: any, size?: any);
+    constructor(localPos?: Vec2, size?: Vec2);
 
     addChild(child: UIObject): void;
     removeChild(child: UIObject): void;
@@ -31,20 +43,48 @@ declare module 'littlejsengine/plugins/uiSystem' {
   export class UIText extends UIObject {
     text: string;
     align: string;
-    constructor(pos: any, size: any, text?: string, align?: string, font?: string);
+    constructor(pos: Vec2, size: Vec2, text?: string, align?: string, font?: string);
   }
 
   export class UIButton extends UIObject {
     text: string;
-    constructor(pos: any, size: any, text: string);
+    constructor(pos: Vec2, size: Vec2, text: string);
   }
 
   export class UICheckbox extends UIObject {
     checked: boolean;
-    constructor(pos: any, size: any, checked?: boolean);
+    constructor(pos: Vec2, size: Vec2, checked?: boolean);
   }
 
-  export function initUISystem(context?: any): void;
-  export function drawUIRect(pos: any, size: any, color?: any, lineWidth?: number, lineColor?: any): void;
-  export function drawUIText(text: string, pos: any, size: any, color?: any, lineWidth?: number, lineColor?: any, align?: string, font?: string): void;
+  export class UIScrollbar extends UIObject {
+    value: number;
+    text: string;
+    handleColor: Color;
+    constructor(pos: Vec2, size: Vec2, value?: number, text?: string);
+  }
+
+  export class UITile extends UIObject {
+    tileInfo: unknown;
+    angle: number;
+    mirror: boolean;
+    constructor(pos: Vec2, size: Vec2, tileInfo: unknown, color?: Color, angle?: number, mirror?: boolean);
+  }
+
+  // UI System initialization
+  export function initUISystem(context?: CanvasRenderingContext2D): void;
+
+  // UI Drawing functions
+  export function drawUIRect(pos: Vec2, size: Vec2, color?: Color, lineWidth?: number, lineColor?: Color): void;
+  export function drawUILine(posA: Vec2, posB: Vec2, thickness?: number, color?: Color): void;
+  export function drawUIText(text: string, pos: Vec2, size: Vec2, color?: Color, lineWidth?: number, lineColor?: Color, align?: string, font?: string): void;
+  export function drawUITile(pos: Vec2, size: Vec2, tileInfo: unknown, color?: Color, angle?: number, mirror?: boolean): void;
+
+  // UI Default values
+  export const uiDefaultColor: Color;
+  export const uiDefaultLineColor: Color;
+  export const uiDefaultTextColor: Color;
+  export const uiDefaultButtonColor: Color;
+  export const uiDefaultHoverColor: Color;
+  export const uiDefaultLineWidth: number;
+  export const uiDefaultFont: string;
 } 

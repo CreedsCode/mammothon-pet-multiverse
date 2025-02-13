@@ -1,8 +1,10 @@
 // This module wraps the global LittleJS UI objects for TypeScript usage
+import type { UIObject, initUISystem as InitUISystemType } from 'littlejsengine/plugins/uiSystem';
+
 declare global {
   interface Window {
-    UIObject: any;
-    initUISystem: any;
+    UIObject: typeof UIObject;
+    initUISystem: typeof InitUISystemType;
   }
 }
 
@@ -13,14 +15,14 @@ function initializeUISystem() {
   if (!uiSystemReady) {
     uiSystemReady = new Promise((resolve) => {
       // Check if the UI system is already loaded
-      if (window.UIObject && window.initUISystem) {
+      if ('UIObject' in window && 'initUISystem' in window) {
         resolve();
         return;
       }
 
       // If not loaded, wait for it
       const checkInterval = setInterval(() => {
-        if (window.UIObject && window.initUISystem) {
+        if ('UIObject' in window && 'initUISystem' in window) {
           clearInterval(checkInterval);
           resolve();
         }
@@ -42,4 +44,5 @@ export async function getInitUISystem() {
 }
 
 // Export types
-export type UIObjectType = any; // We'll improve this later 
+export type { UIObject };
+export type { UIText, UIButton, UICheckbox, UIScrollbar, UITile } from 'littlejsengine/plugins/uiSystem'; 
