@@ -7,7 +7,9 @@ import {
   setCameraPos,
   setCanvasFixedSize,
   setObjectDefaultDamping,
+  setShowSplashScreen,
   setShowWatermark,
+  showSplashScreen,
   vec2,
 } from "littlejsengine";
 import { DeviceManager } from "../device/DeviceManager";
