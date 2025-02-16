@@ -3,6 +3,7 @@ package system
 import (
 	"fmt"
 
+	"github.com/google/uuid"
 	"pkg.world.dev/world-engine/cardinal"
 
 	comp "pet-world/component"
@@ -20,7 +21,7 @@ func PlayerSpawnerSystem(world cardinal.WorldContext) error {
 		world,
 		func(create cardinal.TxData[msg.CreatePlayerMsg]) (msg.CreatePlayerResult, error) {
 			id, err := cardinal.Create(world,
-				comp.Player{Nickname: create.Msg.Nickname},
+				comp.Player{Nickname: create.Msg.Nickname, ID: uuid.New().String()},
 				comp.Health{HP: InitialHP},
 				comp.PetsState{PetsInSlumberCount: 0},
 			)

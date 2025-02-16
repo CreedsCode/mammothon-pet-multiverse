@@ -3,6 +3,7 @@ package system
 import (
 	"fmt"
 
+	"github.com/google/uuid"
 	"pkg.world.dev/world-engine/cardinal"
 
 	comp "pet-world/component"
@@ -14,7 +15,7 @@ func SpawnDefaultPlayersSystem(world cardinal.WorldContext) error {
 	for i := 0; i < 10; i++ {
 		name := fmt.Sprintf("default-%d", i)
 		_, err := cardinal.Create(world,
-			comp.Player{Nickname: name},
+			comp.Player{Nickname: name, ID: uuid.New().String()},
 			comp.Health{HP: InitialHP},
 			comp.PetsState{PetsInSlumberCount: i},
 		)

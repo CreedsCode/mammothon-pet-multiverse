@@ -16,7 +16,7 @@ type PlayerInfoRequest struct {
 }
 
 type PlayerInfoResponse struct {
-	PetsInSlumberCount int
+	PlayerID string
 }
 
 func PlayerInfo(world cardinal.WorldContext, req *PlayerInfoRequest) (*PlayerInfoResponse, error) {
@@ -25,10 +25,10 @@ func PlayerInfo(world cardinal.WorldContext, req *PlayerInfoRequest) (*PlayerInf
 		return nil, fmt.Errorf("nickname cannot be empty")
 	}
 
-	var playerPetState *comp.PetsState
+	var playerInfo *comp.Player
 	var err error
 	searchErr := cardinal.NewSearch().Entity(
-		filter.Contains(filter.Component[comp.Player](), filter.Component[comp.PetsState]())).
+		filter.Contains(filter.Component[comp.Player]())).
 		Each(world, func(id types.EntityID) bool {
 			var player *comp.Player
 			player, err = cardinal.GetComponent[comp.Player](world, id)
@@ -39,9 +39,9 @@ func PlayerInfo(world cardinal.WorldContext, req *PlayerInfoRequest) (*PlayerInf
 
 			// Terminates the search if the player is found
 			if player.Nickname == req.Nickname {
-				playerPetState, err = cardinal.GetComponent[comp.PetsState](world, id)
+				playerInfo, err = cardinal.GetComponent[comp.Player](world, id)
 				if err != nil {
-					err = fmt.Errorf("failed to get PetsState component for entity %v: %w", id, err)
+					err = fmt.Errorf("failed to get Player component for entity %v: %w", id, err)
 					return false
 				}
 				return false
@@ -57,9 +57,9 @@ func PlayerInfo(world cardinal.WorldContext, req *PlayerInfoRequest) (*PlayerInf
 		return nil, fmt.Errorf("error during search: %w", err)
 	}
 
-	if playerPetState == nil {
+	if playerInfo == nil {
 		return nil, fmt.Errorf("player with nickname '%s' not found", req.Nickname)
 	}
 
-	return &PlayerInfoResponse{PetsInSlumberCount: playerPetState.PetsInSlumberCount}, nil
+	return &PlayerInfoResponse{PlayerID: playerInfo.ID}, nil
 }

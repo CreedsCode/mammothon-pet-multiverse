@@ -49,3 +49,49 @@ func queryTargetPlayer(world cardinal.WorldContext, targetNickname string) (type
 
 	return playerID, playerHealth, err
 }
+
+// get all players
+func getPlayers(world cardinal.WorldContext) ([]*comp.Player, error) {
+	players := []*comp.Player{}
+	var searchErr error
+	err := cardinal.NewSearch().Entity(
+		filter.Contains(filter.Component[comp.Player]())).Each(world, func(id types.EntityID) bool {
+		player, err := cardinal.GetComponent[comp.Player](world, id)
+		if err != nil {
+			searchErr = err
+			return false
+		}
+		players = append(players, player)
+		return true
+	})
+	if err != nil {
+		return nil, err
+	}
+	if searchErr != nil {
+		return nil, searchErr
+	}
+	return players, nil
+}
+
+// get all pets
+func getPets(world cardinal.WorldContext) ([]*comp.Pet, error) {
+	pets := []*comp.Pet{}
+	var searchErr error
+	err := cardinal.NewSearch().Entity(
+		filter.Contains(filter.Component[comp.Pet]())).Each(world, func(id types.EntityID) bool {
+		pet, err := cardinal.GetComponent[comp.Pet](world, id)
+		if err != nil {
+			searchErr = err
+			return false
+		}
+		pets = append(pets, pet)
+		return true
+	})
+	if err != nil {
+		return nil, err
+	}
+	if searchErr != nil {
+		return nil, searchErr
+	}
+	return pets, nil
+}

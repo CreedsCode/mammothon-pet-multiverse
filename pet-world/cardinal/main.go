@@ -32,6 +32,7 @@ func MustInitWorld(w *cardinal.World) {
 		cardinal.RegisterComponent[component.Player](w),
 		cardinal.RegisterComponent[component.Health](w),
 		cardinal.RegisterComponent[component.PetsState](w),
+		cardinal.RegisterComponent[component.Pet](w),
 	)
 
 	// Register messages (user action)
@@ -39,6 +40,7 @@ func MustInitWorld(w *cardinal.World) {
 	Must(
 		cardinal.RegisterMessage[msg.CreatePlayerMsg, msg.CreatePlayerResult](w, "create-player"),
 		cardinal.RegisterMessage[msg.AttackPlayerMsg, msg.AttackPlayerMsgReply](w, "attack-player"),
+		cardinal.RegisterMessage[msg.CreatePetMsg, msg.CreatePetMsgResult](w, "create-pet"),
 	)
 
 	// Register queries
@@ -46,6 +48,7 @@ func MustInitWorld(w *cardinal.World) {
 	Must(
 		cardinal.RegisterQuery[query.PlayerInfoRequest, query.PlayerInfoResponse](w, "player-info", query.PlayerInfo),
 		cardinal.RegisterQuery[query.PlayerHealthRequest, query.PlayerHealthResponse](w, "player-health", query.PlayerHealth),
+		cardinal.RegisterQuery[query.PlayerPetsRequest, query.PlayerPetsResponse](w, "player-pets", query.PlayerPets),
 	)
 
 	// Each system executes deterministically in the order they are added.
@@ -56,10 +59,12 @@ func MustInitWorld(w *cardinal.World) {
 		system.AttackSystem,
 		system.RegenSystem,
 		system.PlayerSpawnerSystem,
+		system.CreatePetSystem,
 	))
 
 	Must(cardinal.RegisterInitSystems(w,
 		system.SpawnDefaultPlayersSystem,
+		system.ComunalPetSpawnerSystem,
 	))
 }
 
